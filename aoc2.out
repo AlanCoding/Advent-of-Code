@@ -1,0 +1,49 @@
+
+Solving case problem
+a-lot-of-numbers
+FINAL ANSWER: 797908
+
+Solving case 1
+[
+  1,
+  0,
+  0,
+  0,
+  99
+]
+FINAL ANSWER: 2
+
+Solving case 2
+[
+  2,
+  3,
+  0,
+  3,
+  99
+]
+FINAL ANSWER: 2
+
+Solving case 3
+[
+  2,
+  4,
+  4,
+  5,
+  99,
+  0
+]
+FINAL ANSWER: 2
+
+Solving case 4
+[
+  1,
+  1,
+  1,
+  4,
+  99,
+  5,
+  6,
+  0,
+  99
+]
+FINAL ANSWER: 30
