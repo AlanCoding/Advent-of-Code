@@ -24,9 +24,13 @@ def solve_problem(input):
         print(json.dumps(numbers, indent=2))
     else:
         print('a-lot-of-numbers')
+        # before running the program
+        # replace position 1 with the value 12 and
+        numbers[1] = 12
+        # replace position 2 with the value 2.
+        numbers[2] = 2
 
     i = 0
-
 
     while True:
         val = numbers[i]
@@ -46,6 +50,7 @@ def solve_problem(input):
             numbers[outp] = in1 * in2
         i += 4
 
+    # What value is left at position 0 after the program halts?
     print(f'FINAL ANSWER: {numbers[0]}')
 
 
