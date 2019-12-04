@@ -8,3 +8,14 @@ Iterating on 400000, at count 1352
 Iterating on 500000, at count 1603
 Iterating on 600000, at count 1729
 Answer: 1764
+
+*********** part 2 **********
+Example 112233, outcome: True
+Example 123444, outcome: False
+Example 111122, outcome: True
+Iterating on 200000, at count 70
+Iterating on 300000, at count 616
+Iterating on 400000, at count 928
+Iterating on 500000, at count 1093
+Iterating on 600000, at count 1172
+Answer: 1196
