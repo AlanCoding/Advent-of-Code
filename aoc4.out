@@ -1,0 +1,10 @@
+Examples
+Example 111111, outcome: True
+Example 223450, outcome: False
+Example 123789, outcome: False
+Iterating on 200000, at count 125
+Iterating on 300000, at count 896
+Iterating on 400000, at count 1352
+Iterating on 500000, at count 1603
+Iterating on 600000, at count 1729
+Answer: 1764
