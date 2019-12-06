@@ -8,15 +8,6 @@ with open(__file__.replace('.py', '.txt')) as f:
 
 data = {
     'problem': problem,
-    '1': '1,0,0,0,99',
-    '2': '2,3,0,3,99',
-    '3': '2,4,4,5,99,0',
-    '4': '1,1,1,4,99,5,6,0,99'
-}
-
-
-data = {
-    'problem': problem,
     # distance 159
     # part 2: 610
     '1': 'R75,D30,R83,U83,L12,D49,R71,U7,L72\nU62,R66,U55,R34,D71,R55,D58,R83',
