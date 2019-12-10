@@ -93,19 +93,13 @@ def visible_count(p, asteroids):
 
 def solve_problem(input):
     asteroids = set()
-    max_p = [0, 0]
     for y, line in enumerate(input.split('\n')):
         for x, character in enumerate(line):
             if character == '#':
                 asteroids.add((x, y))
-                if x > max_p[0]:
-                    max_p[0] = x
-                if y > max_p[1]:
-                    max_p[1] = y
 
     asteroids = frozenset(asteroids)  # lock down modifications
     print('  total asteroid count: {0}'.format(len(asteroids)))
-    print(f'  size of asteroid field: {max_p}')
 
     # print(asteroids)
     max_see = 0
@@ -123,4 +117,4 @@ for name, input in data.items():
     see_ct, location = solve_problem(input)
     loc_str = ','.join([str(p) for p in location])
     print(f'Answer for {name}: '
-          'Best is {loc_str} with {see_ct} other asteroids detected')
+          f'Best is {loc_str} with {see_ct} other asteroids detected')
