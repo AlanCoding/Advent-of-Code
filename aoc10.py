@@ -71,17 +71,22 @@ def sign(number):
     return number // abs(number)
 
 
+def get_direction_vector(p1, p2):
+    delta_p = tuple(p2[j] - p1[j] for j in range(2))
+    if any(delta_p[j] == 0 for j in range(2)):
+        direction = tuple(sign(delta_p[j]) for j in range(2))
+    else:
+        factor = abs(delta_p[1] // Fraction(delta_p[1], delta_p[0]).numerator)
+        direction = tuple(delta_p[j] // factor for j in range(2))
+    return direction
+
+
 def visible_directions(p, asteroids):
     directions = set()
     for p2 in asteroids:
         if p == p2:
             continue  # do not count yourself
-        delta_p = tuple(p2[j] - p[j] for j in range(2))
-        if any(delta_p[j] == 0 for j in range(2)):
-            direction = tuple(sign(delta_p[j]) for j in range(2))
-        else:
-            factor = abs(delta_p[1] // Fraction(delta_p[1], delta_p[0]).numerator)
-            direction = tuple(delta_p[j] // factor for j in range(2))
+        direction = get_direction_vector(p, p2)
         directions.add(direction)
     return directions
 
@@ -113,3 +118,13 @@ for name, input in data.items():
     loc_str = ','.join([str(p) for p in location])
     print(f'Answer for {name}: '
           f'Best is {loc_str} with {see_ct} other asteroids detected')
+
+
+print('')
+print('***** PART 2 ******')
+
+
+# for name, input in data.items():
+#     print('')
+#     see_ct, location = solve_problem(input)
+
