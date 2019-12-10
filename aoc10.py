@@ -1,4 +1,4 @@
-from itertools import chain
+from fractions import Fraction
 
 
 with open(__file__.replace('.py', '.txt')) as f:
@@ -65,51 +65,25 @@ data = {
 }
 
 
-def can_see(p1, p2, asteroids):
-    delta_p = tuple(p2[j] - p1[j] for j in range(2))
-    for (j, k) in ((1, 0), (0, 1)):
-        if delta_p[j] == 0:
-            if delta_p[k] == 0:
-                return False  # do not count self
-            continue
-        sign = delta_p[j] // abs(delta_p[j])
-        # loop over all candidate fractions
-        for delta_j in range(sign, delta_p[j], sign):
-            if abs(delta_p[k] * delta_j) % abs(delta_p[j]) != 0:
-                continue  # fraction did not divide other dimension, not in center
-            delta_k = (delta_p[k] * delta_j) // delta_p[j]  # no remainder
-            this_point = [None for i in range(2)]
-            this_point[j] = p1[j] + delta_j
-            this_point[k] = p1[k] + delta_k
-            if tuple(this_point) in asteroids:
-                return False
-
-    # if delta_p[0] == 0:
-    #     if delta_p[1] == 0:
-    #         return False  # do not count self
-    #     y_sign = abs(delta_p[1]) // delta_p[1]
-    #     for y in range(p1[1] + y_sign, p2[1], y_sign):
-    #         if (p1[0], y) in asteroids:
-    #             return False
-    # else:
-    #     # loop through all (x, y) points on straight line
-    #     x_sign = abs(delta_p[0]) // delta_p[0]
-    #     for x in range(p1[0] + x_sign, p2[0], x_sign):
-    #         if abs(delta_p[1] * (x - p1[0])) % abs(delta_p[0]) != 0:
-    #             continue  # did not pass through center of box
-    #         delta_y = ((delta_p[1]) * (x - p1[0])) // (delta_p[0])
-    #         y = p1[1] + delta_y
-    #         if (x, y) in asteroids:
-    #             return False
-    return True
+def sign(number):
+    if number == 0:
+        return 0
+    return number // abs(number)
 
 
-def visible_count(p, asteroids):
-    ct = 0
+def visible_directions(p, asteroids):
+    directions = set()
     for p2 in asteroids:
-        if can_see(p, p2, asteroids):
-            ct += 1
-    return ct
+        if p == p2:
+            continue  # do not count yourself
+        delta_p = tuple(p2[j] - p[j] for j in range(2))
+        if any(delta_p[j] == 0 for j in range(2)):
+            direction = tuple(sign(delta_p[j]) for j in range(2))
+        else:
+            factor = abs(delta_p[1] // Fraction(delta_p[1], delta_p[0]).numerator)
+            direction = tuple(delta_p[j] // factor for j in range(2))
+        directions.add(direction)
+    return directions
 
 
 def solve_problem(input):
@@ -122,10 +96,10 @@ def solve_problem(input):
     asteroids = frozenset(asteroids)  # lock down modifications
     print('  total asteroid count: {0}'.format(len(asteroids)))
 
-    # print(asteroids)
     max_see = 0
     for this_loc in asteroids:
-        ct = visible_count(this_loc, asteroids)
+        directions = visible_directions(this_loc, asteroids)
+        ct = len(directions)
         if ct > max_see:
             max_see = ct
             loc = this_loc
