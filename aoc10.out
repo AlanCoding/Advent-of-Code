@@ -1,18 +1,41 @@
 
-  total asteroid count: 335
 Answer for problem: Best is 11,19 with 253 other asteroids detected
 
-  total asteroid count: 10
 Answer for 1: Best is 3,4 with 8 other asteroids detected
 
-  total asteroid count: 40
 Answer for 2: Best is 5,8 with 33 other asteroids detected
 
-  total asteroid count: 40
 Answer for 3: Best is 1,2 with 35 other asteroids detected
 
-  total asteroid count: 50
 Answer for 4: Best is 6,3 with 41 other asteroids detected
 
-  total asteroid count: 300
 Answer for 5: Best is 11,13 with 210 other asteroids detected
+
+***** PART 2 ******
+
+testing angle function
+These should all increase in order for sorting to be right
+dead up 0.0
+Upper right 0.7853981633974483
+dead right 1.5707963267948966
+lower right 2.356194490192345
+lower left 3.9269908169872414
+Upper left 5.497787143782138
+
+Answer for problem: 201th asteroid is (8, 15)
+  multiply its X coordinate by 100 and then add its Y coordinate 815
+
+Answer for 1: 5th asteroid is (4, 4)
+  multiply its X coordinate by 100 and then add its Y coordinate 404
+
+Answer for 2: 20th asteroid is (6, 9)
+  multiply its X coordinate by 100 and then add its Y coordinate 609
+
+Answer for 3: 20th asteroid is (8, 7)
+  multiply its X coordinate by 100 and then add its Y coordinate 807
+
+Answer for 4: 25th asteroid is (3, 7)
+  multiply its X coordinate by 100 and then add its Y coordinate 307
+
+Answer for 5: 201th asteroid is (8, 2)
+  multiply its X coordinate by 100 and then add its Y coordinate 802
