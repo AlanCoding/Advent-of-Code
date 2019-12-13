@@ -1,6 +1,8 @@
 from collections import namedtuple
 import copy
 import re
+import json
+from math import gcd
 
 
 with open(__file__.replace('.py', '.txt')) as f:
@@ -110,4 +112,60 @@ def solve_problem(input, steps=1):
 for name, input in data.items():
     print('')
     r = solve_problem(input, steps=use_steps[name])
+    print(f'Answer for {name}: {r}')
+
+
+def one_dim_state(moons, k):
+    """Returns a vector to represent the state of all x positions
+    and all x velocities, or any other index."""
+    return (
+        tuple(moon.position[k] for moon in moons),
+        tuple(moon.velocity[k] for moon in moons)
+    )
+
+
+def part2(input):
+    moons = read_input(input)
+    start_states = tuple(one_dim_state(moons, k) for k in range(3))
+    vector_period = {}
+
+    step = 0
+    while len(vector_period) < 3:
+        step += 1
+        old_moons = copy.deepcopy(moons)
+        for this in moons:
+            for that in old_moons:
+                if this.idx == that.idx:
+                    continue  # don't gravitate yourself
+                # gravity effects
+                for k in range(3):
+                    if this.position[k] == that.position[k]:
+                        continue  # no change
+                    this.velocity[k] += sign(that.position[k] - this.position[k])
+            # movement
+            for k in range(3):
+                this.position[k] += this.velocity[k]
+        for k in range(3):
+            if one_dim_state(moons, k) == start_states[k]:
+                vector_period[k] = step
+        if step % 100000 == 0:
+            print(f'  step {step}, {vector_period}')
+            print('     {}'.format(one_dim_state(moons, k)))
+            print('     {}'.format(start_states[k]))
+
+    print('')
+    print(json.dumps(vector_period, indent=2))
+    # least common multiplier
+    d, e, f = (vector_period[0], vector_period[1], vector_period[2])
+    de_lcm = (d * e) // gcd(d, e)
+    lcm = (de_lcm * f) // gcd(de_lcm, f)
+    return lcm
+
+
+print('')
+print('***** PART 2 ******')
+
+for name, input in data.items():
+    print('')
+    r = part2(input)
     print(f'Answer for {name}: {r}')
