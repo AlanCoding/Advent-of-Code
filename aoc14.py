@@ -115,7 +115,7 @@ def ore_multiplier(prod_name, number, production, inventory):
     return ore_ct
 
 
-def solve_problem(input, steps=1):
+def read_input(input):
     # dictionary keyed off reaction product code
     production = {}
     for line in input.split('\n'):
@@ -130,6 +130,12 @@ def solve_problem(input, steps=1):
             raise Exception('Multiple routes to product production not supported.')
         production[product_name] = (int(product_ct), reactants)
 
+    return production
+
+
+def solve_problem(input, steps=1):
+    production = read_input(input)
+
     # *cringe* dictionary of how much is in inventory
     inventory = {}
 
@@ -141,3 +147,44 @@ for name, input in data.items():
     r = solve_problem(input)
     print(f'Answer for {name}: {r}')
 
+
+def part2(input, steps=1):
+    production = read_input(input)
+
+    inventory = {}
+
+    ONE_TRILLION = 1000000000000
+
+    ore_cost = 0
+    fuel_ct = 0
+    fuel_step = ONE_TRILLION
+    while True:
+        while True:
+            speculative_inv = inventory.copy()
+            speculative_ore_cost_delta = ore_multiplier('FUEL', fuel_step, production, inventory)
+            if ore_cost + speculative_ore_cost_delta > ONE_TRILLION:
+                if fuel_step == 1:
+                    print(f'exit condition, cost {ore_cost}, delta {speculative_ore_cost_delta}')
+                    return fuel_ct
+                fuel_step = int(fuel_step // 2)  # optimizable
+                print(f'reducing step to {fuel_step}, on fuel amount {fuel_ct}')
+            else:
+                inventory = speculative_inv
+                break
+        ore_cost += speculative_ore_cost_delta
+        # if ore_cost > ONE_TRILLION:
+        #     break
+        fuel_ct += fuel_step
+    return fuel_ct
+
+
+print('')
+print('****** PART 2 ******')
+
+
+for name, input in data.items():
+    print('')
+    r = part2(input)
+    print(f'Answer for {name}: {r}')
+
+# 1330073, too high
