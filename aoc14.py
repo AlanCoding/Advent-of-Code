@@ -68,32 +68,51 @@ data['5'] = """171 ORE => 8 CNZTR
 5 BHXH, 4 VRPVC => 5 LTCX"""  # 2210736
 
 
-def ore_multiplier(prod_name, number, production, cache, inventory):
-    """Recursive method for any arbitrary species
-    finds the number of ORE needed to make it"""
-    ct, reactants = production[prod_name]
-    # first find the number of ORE needed to run this reaction, as written, once
-    if prod_name in cache:
-        ore_ct = cache[prod_name]
-    else:
-        ore_ct = 0
-        for reactant in reactants:
-            in_ct, name = reactant
-            if name == 'ORE':
-                ore_ct += in_ct
-            else:
-                ore_ct += ore_multiplier(name, in_ct, production, cache, inventory)
-        cache[prod_name] = ore_ct
-        print(f'Need {ore_ct} ORE to make {ct} {prod_name} from: {" ".join(str(entry) for entry in reactants)}.')
+pretty = False
 
-    if ct >= number:
-        r = ore_ct
-    else:
-        r = (number // ct) + 1
-    print(f'     need {r} ORE to make {number} {prod_name} from known reaction.')
+
+def ore_multiplier(prod_name, number, production, inventory):
+    ct, reactants = production[prod_name]
+    warehouse_has = inventory.get(prod_name, 0)
+
+    # do we need to run this reaction once or more?
+    this_needs = number - warehouse_has
+
+    # Use what we already have in stock
+    if this_needs <= 0:
+        if pretty:
+            print(f'Using available {number} of available {warehouse_has} of {prod_name}')
+        inventory[prod_name] -= number
+        return 0
+
+    # round up if division has a remainder
+    runs = (this_needs // ct) + int(this_needs % ct > 0)
+
+    ore_ct = 0
+    new_ore = 0
+    for reactant in reactants:
+        in_ct, name = reactant
+        if name == 'ORE':
+            ore_ct += in_ct * runs
+            new_ore += in_ct * runs
+        else:
+            ore_ct += ore_multiplier(name, in_ct * runs, production, inventory)
+    if pretty:
+        print(f'Need {ore_ct} ORE ({new_ore} local) to make {runs * ct} {prod_name} in {runs} runs from: {" ".join(str(entry) for entry in reactants)}.')
+
+    produced = runs * ct
+    warehouse_has_new = inventory.get(prod_name, 0)
+    if warehouse_has != warehouse_has_new and pretty:
+        print(f'   warehouse stores changed while running sub-reactions {warehouse_has}->{warehouse_has_new} for {prod_name}')
+    inventory[prod_name] = warehouse_has_new + produced - number
+    if inventory[prod_name] and pretty:
+        print(f'   saved {inventory[prod_name]} leftover {prod_name}, prior amount was {warehouse_has_new}')
+    if inventory[prod_name] < 0:
+        raise Exception(f'Something went wrong, on {prod_name}, inventory {inventory[prod_name]}')
+
     if prod_name == 'ORE':
         raise Exception('You can only call this on non-ORE species.')
-    return r
+    return ore_ct
 
 
 def solve_problem(input, steps=1):
@@ -111,12 +130,10 @@ def solve_problem(input, steps=1):
             raise Exception('Multiple routes to product production not supported.')
         production[product_name] = (int(product_ct), reactants)
 
-    # dictionary of how much ore it takes to make something
-    cache = {}
     # *cringe* dictionary of how much is in inventory
     inventory = {}
 
-    return ore_multiplier('FUEL', 1, production, cache, inventory)
+    return ore_multiplier('FUEL', 1, production, inventory)
 
 
 for name, input in data.items():
