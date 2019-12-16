@@ -161,7 +161,7 @@ def part2(input, steps=1):
     while True:
         while True:
             speculative_inv = inventory.copy()
-            speculative_ore_cost_delta = ore_multiplier('FUEL', fuel_step, production, inventory)
+            speculative_ore_cost_delta = ore_multiplier('FUEL', fuel_step, production, speculative_inv)
             if ore_cost + speculative_ore_cost_delta > ONE_TRILLION:
                 if fuel_step == 1:
                     print(f'exit condition, cost {ore_cost}, delta {speculative_ore_cost_delta}')
@@ -172,8 +172,6 @@ def part2(input, steps=1):
                 inventory = speculative_inv
                 break
         ore_cost += speculative_ore_cost_delta
-        # if ore_cost > ONE_TRILLION:
-        #     break
         fuel_ct += fuel_step
     return fuel_ct
 
@@ -188,3 +186,4 @@ for name, input in data.items():
     print(f'Answer for {name}: {r}')
 
 # 1330073, too high
+# 1330066 correct
